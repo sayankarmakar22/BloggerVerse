@@ -40,7 +40,7 @@ public class Author {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
-    private List<Content_Type> contentType;
+    private List<ContentType> contentType;
 
     @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
     private List<BlogPost> blogPostList;

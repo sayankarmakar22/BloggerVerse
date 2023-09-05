@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Entity
 @Table(name = "ContentType")
-public class Content_Type {
+public class ContentType {
     @Id
     @ManyToOne()
     @JoinColumn(name = "authorId")
