@@ -1,12 +1,13 @@
 package com.sayan.BlogApplication.Model;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,8 +20,8 @@ import java.util.List;
 @Table(name = "Author")
 public class Author {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @Column(length = 150)
+    private String id;
 
     @Column(length = 255)
     private String name;
@@ -28,7 +29,7 @@ public class Author {
     private Date registrationDateTime;
 
     @Column(length = 255)
-    private int username;
+    private String username;
 
     @Column(length = 1500)
     private String password;
@@ -40,10 +41,10 @@ public class Author {
     private String phoneNumber;
 
     @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
-    private List<ContentType> contentType;
+    private List<ContentType> contentType = new ArrayList<>();
 
     @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
-    private List<BlogPost> blogPostList;
+    private List<BlogPost> blogPostList = new ArrayList<>();;
 
 
 }

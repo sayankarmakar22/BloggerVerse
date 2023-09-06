@@ -1,12 +1,14 @@
 package com.sayan.BlogApplication.Model;
 
-import jakarta.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,13 +27,13 @@ public class BlogPost {
     private String blogTitle;
     private Date blogDateTime;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "authorId")
     private Author author;
 
     @OneToMany(mappedBy = "blogId",cascade = CascadeType.ALL)
-    private List<BlogComment> blogComments;
+    private List<BlogComment> blogComments  = new ArrayList<>();;
 
     @OneToMany(mappedBy = "blogId",cascade = CascadeType.ALL)
-    private List<BlogView> blogViewCount;
+    private List<BlogView> blogViewCount = new ArrayList<>();;
 }
