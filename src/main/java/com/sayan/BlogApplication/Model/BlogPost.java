@@ -21,7 +21,7 @@ import java.util.List;
 @Table(name = "BlogPost")
 public class BlogPost {
     @Id
-    private int blogId;
+    private String blogId;
     @Column(length = 5000)
     private String blogContent;
     private String blogTitle;

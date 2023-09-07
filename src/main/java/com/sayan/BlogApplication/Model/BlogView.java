@@ -18,9 +18,9 @@ import javax.persistence.*;
 @Table(name = "BlogViewer")
 public class BlogView {
     @Id
-    private int viewSerialId;
-    private int viewerId;
-    private int authorId;
+    private String viewSerialId;
+    private String viewerId;
+    private String authorId;
     private long viewCount;
 
     @ManyToOne

@@ -19,8 +19,8 @@ import java.util.Date;
 @Table(name = "BlogComments")
 public class BlogComment {
     @Id
-    private int blogSerialNumber;
-    private int viewerId;
+    private String blogSerialNumber;
+    private String viewerId;
     private String comments;
     private Date commentDateTime;
 
