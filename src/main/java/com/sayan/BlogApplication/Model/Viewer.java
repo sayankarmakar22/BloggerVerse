@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -21,7 +22,7 @@ import javax.persistence.Table;
 @Table(name = "Viewer")
 public class Viewer {
     @Id
-    private int viewerId;
+    private String viewerId;
 
     @Column(length = 100)
     private String name;
@@ -30,8 +31,11 @@ public class Viewer {
     private String email;
 
     @Column(length = 100)
-    private int username;
+    private String username;
 
     @Column(length = 1500)
     private String password;
+
+    @Column
+    private Date registrationDateTime;
 }
