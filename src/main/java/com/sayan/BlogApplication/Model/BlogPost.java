@@ -27,8 +27,8 @@ public class BlogPost {
     private String blogTitle;
     private Date blogDateTime;
 
-    @ManyToOne
     @JoinColumn(name = "authorId")
+    @ManyToOne
     private Author author;
 
     @OneToMany(mappedBy = "blogId",cascade = CascadeType.ALL)

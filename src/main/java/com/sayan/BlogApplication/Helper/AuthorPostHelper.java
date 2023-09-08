@@ -15,22 +15,27 @@ import java.util.List;
 
 @Component
 public class AuthorPostHelper {
-    public static void setPostDetailsRequest(AuthorPostRequest authorPostRequest, BlogPost blogPost, Author author){
-        List<BlogPost> postList = new ArrayList<>();
-//        author
+    public static void setPostDetailsRequest(AuthorPostRequest authorPostRequest, BlogPost blogPost, Author author,Author fetchedAuthor){
+        author.setId(fetchedAuthor.getId());
+        author.setName(fetchedAuthor.getName());
+        author.setUsername(fetchedAuthor.getUsername());
+        author.setRegistrationDateTime(fetchedAuthor.getRegistrationDateTime());
+        author.setPassword(fetchedAuthor.getPassword());
+        author.setEmail(fetchedAuthor.getEmail());
+        author.setPhoneNumber(fetchedAuthor.getPhoneNumber());
+
         blogPost.setBlogId(authorPostRequest.getBlogId());
         blogPost.setBlogContent(authorPostRequest.getBlogContent());
         blogPost.setBlogTitle(authorPostRequest.getBlogTitle());
         blogPost.setBlogDateTime(new Date());
-        postList.add(blogPost);
-        author.setBlogPostList(postList);
+        blogPost.setAuthor(author);
     }
-    public static AuthorPostResponse setPostDetailsResponse(AuthorPostResponse authorPostResponse,BlogPost blogPost,Author author){
-        authorPostResponse.setAuthorId(author.getId());
-        authorPostResponse.setBlogId(blogPost.getBlogId());
-        authorPostResponse.setBlogTitle(blogPost.getBlogTitle());
-        authorPostResponse.setBlogContent(blogPost.getBlogContent());
-        authorPostResponse.setPublishDateTime(blogPost.getBlogDateTime());
+    public static AuthorPostResponse setPostDetailsResponse(AuthorPostResponse authorPostResponse,BlogPost post){
+        authorPostResponse.setAuthorId(post.getAuthor().getId());
+        authorPostResponse.setBlogId(post.getBlogId());
+        authorPostResponse.setBlogContent(post.getBlogContent());
+        authorPostResponse.setBlogTitle(post.getBlogTitle());
+        authorPostResponse.setPublishDateTime(post.getBlogDateTime());
         return authorPostResponse;
     }
 }

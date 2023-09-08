@@ -6,6 +6,6 @@ import com.sayan.BlogApplication.DTO.AuthorPostResponse;
 public interface AuthorPostServices {
     AuthorPostResponse createNewPost(AuthorPostRequest authorPostRequest);
     AuthorPostResponse updatePost(AuthorPostRequest authorPostRequest);
-    String deletePost(int blogId);
-    AuthorPostResponse viewPost(int blogId);
+    String deletePost(String blogId);
+    AuthorPostResponse viewPost(String blogId);
 }

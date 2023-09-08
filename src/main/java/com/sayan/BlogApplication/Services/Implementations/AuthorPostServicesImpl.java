@@ -3,6 +3,7 @@ package com.sayan.BlogApplication.Services.Implementations;
 import com.sayan.BlogApplication.DTO.AuthorPostRequest;
 import com.sayan.BlogApplication.DTO.AuthorPostResponse;
 import com.sayan.BlogApplication.DTO.AuthorResponse;
+import com.sayan.BlogApplication.Helper.AuthorHelper;
 import com.sayan.BlogApplication.Helper.AuthorPostHelper;
 import com.sayan.BlogApplication.Model.Author;
 import com.sayan.BlogApplication.Model.BlogComment;
@@ -31,47 +32,43 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
     @Transactional
     @Override
     public AuthorPostResponse createNewPost(AuthorPostRequest authorPostRequest) {
+        if(authorRepo.existsById(authorPostRequest.getAuthorId())){
+            Author author = new Author();
+            BlogPost blogPost = new BlogPost();
+            AuthorPostResponse authorPostResponse = new AuthorPostResponse();
 
-        AuthorPostResponse authorPostResponse = new AuthorPostResponse();
-
-        Author authorFromDb = authorRepo.findByid(authorPostRequest.getAuthorId());
-
-        BlogPost blogPost = new BlogPost();
-
-        blogPost.setBlogId(authorPostRequest.getBlogId());
-        blogPost.setBlogContent(authorPostRequest.getBlogContent());
-        blogPost.setBlogTitle(authorPostRequest.getBlogTitle());
-        blogPost.setBlogDateTime(new Date());
-        blogPost.setAuthor(authorFromDb);
-
-        BlogPost save = blogPostRepo.save(blogPost);
-
-        List<BlogPost> postList = new ArrayList<>();
-        postList.add(save);
-        
-        authorFromDb.setBlogPostList(postList);
-
-        authorPostResponse.setAuthorId(authorFromDb.getId());
-        authorPostResponse.setBlogId(blogPost.getBlogId());
-        authorPostResponse.setBlogTitle(blogPost.getBlogTitle());
-        authorPostResponse.setBlogContent(blogPost.getBlogContent());
-        authorPostResponse.setPublishDateTime(blogPost.getBlogDateTime());
-        return authorPostResponse;
+            Author fetchedAuthor = authorRepo.findByid(authorPostRequest.getAuthorId());
+            AuthorPostHelper.setPostDetailsRequest(authorPostRequest,blogPost,author,fetchedAuthor);
+            BlogPost post = blogPostRepo.save(blogPost);
+            return AuthorPostHelper.setPostDetailsResponse(authorPostResponse,post);
+        }
+        throw new RuntimeException("user not exists");
     }
 
     @Override
     public AuthorPostResponse updatePost(AuthorPostRequest authorPostRequest) {
-        return null;
+        BlogPost blogPost = new BlogPost();
+        AuthorPostResponse authorPostResponse = new AuthorPostResponse();
+        BlogPost foundPublishedBlogFromDb = blogPostRepo.findByblogId(authorPostRequest.getBlogId());
+        foundPublishedBlogFromDb.setBlogTitle(authorPostRequest.getBlogTitle());
+        foundPublishedBlogFromDb.setBlogContent(authorPostRequest.getBlogContent());
+        BlogPost editedBlogContent = blogPostRepo.save(foundPublishedBlogFromDb);
+        AuthorPostHelper.setPostDetailsResponse(authorPostResponse,editedBlogContent);
+        return authorPostResponse;
     }
 
     @Override
-    public String deletePost(int blogId) {
-        return null;
+    public String deletePost(String blogId) {
+        blogPostRepo.deleteById(blogId);
+        return blogId + " has been deleted successfully !!!!";
     }
 
     @Override
-    public AuthorPostResponse viewPost(int blogId) {
-        return null;
+    public AuthorPostResponse viewPost(String blogId) {
+        BlogPost foundPublishedBlog = blogPostRepo.findByblogId(blogId);
+        AuthorPostResponse authorPostResponse = new AuthorPostResponse();
+        AuthorPostResponse response = AuthorPostHelper.setPostDetailsResponse(authorPostResponse, foundPublishedBlog);
+        return response;
     }
 
 }

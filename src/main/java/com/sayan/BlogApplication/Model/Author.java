@@ -40,11 +40,6 @@ public class Author {
     @Column(length = 15)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
-    private List<ContentType> contentType = new ArrayList<>();
-
-    @OneToMany(mappedBy = "author",cascade = CascadeType.ALL)
-    private List<BlogPost> blogPostList = new ArrayList<>();;
 
 
 }
