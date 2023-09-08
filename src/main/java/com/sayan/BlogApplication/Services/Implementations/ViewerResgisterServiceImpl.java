@@ -1,18 +1,34 @@
 package com.sayan.BlogApplication.Services.Implementations;
 
+import com.sayan.BlogApplication.DTO.AuthorPostResponse;
+import com.sayan.BlogApplication.DTO.BlogViewResponse;
 import com.sayan.BlogApplication.DTO.ViewerRegisterRequest;
 import com.sayan.BlogApplication.DTO.ViewerRegisterResponse;
 import com.sayan.BlogApplication.Helper.ViewerHelper;
+import com.sayan.BlogApplication.Model.Author;
+import com.sayan.BlogApplication.Model.BlogPost;
+import com.sayan.BlogApplication.Model.BlogView;
 import com.sayan.BlogApplication.Model.Viewer;
+import com.sayan.BlogApplication.Repository.AuthorRepo;
+import com.sayan.BlogApplication.Repository.BlogPostRepo;
+import com.sayan.BlogApplication.Repository.BlogViewRepo;
 import com.sayan.BlogApplication.Repository.ViewerRepo;
 import com.sayan.BlogApplication.Services.ViewerServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class ViewerResgisterServiceImpl implements ViewerServices {
     @Autowired
     private ViewerRepo viewerRepo;
+    @Autowired
+    private AuthorRepo authorRepo;
+    @Autowired
+    private BlogViewRepo blogViewRepo;
+    @Autowired
+    private BlogPostRepo blogPostRepo;
     @Override
     public ViewerRegisterResponse registerViewer(ViewerRegisterRequest viewerRegisterRequest){
         Viewer viewer = new Viewer();
@@ -50,5 +66,53 @@ public class ViewerResgisterServiceImpl implements ViewerServices {
     public String deleteViewerAccount(String viewerId) {
         viewerRepo.deleteById(viewerId);
         return viewerId + " has been successfully deleted";
+    }
+
+    @Override
+    public BlogViewResponse viewBlogAndUpdatedViewsToDb(String blogId,String viewerId) {
+        BlogPost publishedBlog = blogPostRepo.findByblogId(blogId);
+        Viewer savedViewer = viewerRepo.findByviewerId(viewerId); //get viewer details from db
+        Author savedAuthor = authorRepo.findByid(publishedBlog.getAuthor().getId()); // get the saved author from db
+
+        Author author = new Author();
+        author.setId(savedAuthor.getId());
+        author.setName(savedAuthor.getName());
+        author.setRegistrationDateTime(savedAuthor.getRegistrationDateTime());
+        author.setUsername(savedAuthor.getUsername());
+        author.setPassword(savedAuthor.getPassword());
+        author.setEmail(savedAuthor.getEmail());
+        author.setPhoneNumber(savedAuthor.getPhoneNumber());
+
+//        Viewer viewer = new Viewer();
+//        viewer.setViewerId(savedViewer.getViewerId());
+//        viewer.setName(savedViewer.getName());
+//        viewer.setEmail(savedViewer.getEmail());
+//        viewer.setUsername(savedViewer.getUsername());
+//        viewer.setPassword(savedViewer.getPassword());
+//        viewer.setRegistrationDateTime(savedViewer.getRegistrationDateTime());
+
+        BlogPost blogPost = new BlogPost();
+        blogPost.setBlogId(publishedBlog.getBlogId());
+        blogPost.setBlogContent(publishedBlog.getBlogContent());
+        blogPost.setBlogTitle(publishedBlog.getBlogTitle());
+        blogPost.setBlogDateTime(publishedBlog.getBlogDateTime());
+        blogPost.setAuthor(savedAuthor);
+
+//        if((viewerRepo.existsByviewerId(viewerId)) && (viewerId.equals(savedViewer.getViewerId()))){
+            BlogView blogView = new BlogView();
+            blogView.setViewSerialId(String.valueOf(UUID.randomUUID()));
+            blogView.setViewerId(viewerId);
+            blogView.setAuthorId(savedAuthor.getId());
+            blogView.setViewCount(1);
+            blogView.setBlogId(blogPost);
+            BlogView savedBlog = blogViewRepo.save(blogView);
+
+            BlogViewResponse blogViewResponse = new BlogViewResponse();
+            blogViewResponse.setAuthorName(savedAuthor.getName());
+            blogViewResponse.setBlogTitle(blogPost.getBlogTitle());
+            blogViewResponse.setBlogContent(blogPost.getBlogContent());
+            long totalViews = blogViewRepo.totalViews(blogId);
+            blogViewResponse.setBlogViews(totalViews);
+            return blogViewResponse;
     }
 }

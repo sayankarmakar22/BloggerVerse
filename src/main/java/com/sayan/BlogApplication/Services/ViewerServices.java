@@ -1,5 +1,6 @@
 package com.sayan.BlogApplication.Services;
 
+import com.sayan.BlogApplication.DTO.BlogViewResponse;
 import com.sayan.BlogApplication.DTO.ViewerRegisterRequest;
 import com.sayan.BlogApplication.DTO.ViewerRegisterResponse;
 import org.springframework.stereotype.Repository;
@@ -11,4 +12,6 @@ public interface ViewerServices {
     ViewerRegisterResponse getViewerDeatils(String viewerId);
     ViewerRegisterResponse updateViewerDetails(ViewerRegisterRequest viewerRegisterRequest);
     String deleteViewerAccount(String viewerId);
+
+    BlogViewResponse viewBlogAndUpdatedViewsToDb(String blogId,String viewerId);
 }

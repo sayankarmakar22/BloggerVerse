@@ -1,5 +1,6 @@
 package com.sayan.BlogApplication.Controllers;
 
+import com.sayan.BlogApplication.DTO.BlogViewResponse;
 import com.sayan.BlogApplication.DTO.ViewerRegisterRequest;
 import com.sayan.BlogApplication.DTO.ViewerRegisterResponse;
 import com.sayan.BlogApplication.Model.Viewer;
@@ -32,5 +33,9 @@ public class ViewerControllers {
     @DeleteMapping("/delete-viewer-account/{viewerId}")
     public ResponseEntity<String> deleteAccountViewer(@PathVariable String viewerId){
         return new ResponseEntity<>(viewerResgisterService.deleteViewerAccount(viewerId),HttpStatus.OK);
+    }
+    @GetMapping("/view-post/{viewerId}/{blogId}")
+    public ResponseEntity<BlogViewResponse> viewBlog(@PathVariable String blogId,@PathVariable String viewerId){
+        return new ResponseEntity<>(viewerResgisterService.viewBlogAndUpdatedViewsToDb(blogId,viewerId),HttpStatus.OK);
     }
 }

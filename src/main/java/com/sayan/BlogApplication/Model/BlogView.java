@@ -18,6 +18,7 @@ import javax.persistence.*;
 @Table(name = "BlogViewer")
 public class BlogView {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String viewSerialId;
     private String viewerId;
     private String authorId;

@@ -31,9 +31,5 @@ public class BlogPost {
     @ManyToOne
     private Author author;
 
-    @OneToMany(mappedBy = "blogId",cascade = CascadeType.ALL)
-    private List<BlogComment> blogComments  = new ArrayList<>();;
 
-    @OneToMany(mappedBy = "blogId",cascade = CascadeType.ALL)
-    private List<BlogView> blogViewCount = new ArrayList<>();;
 }
