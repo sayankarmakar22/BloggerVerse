@@ -13,5 +13,5 @@ public interface ViewerServices {
     ViewerRegisterResponse updateViewerDetails(ViewerRegisterRequest viewerRegisterRequest);
     String deleteViewerAccount(String viewerId);
 
-    BlogViewResponse viewBlogAndUpdatedViewsToDb(String blogId,String viewerId);
+    BlogViewResponse viewBlogAndUpdatedViewsToDb(String viewSerialId,String blogId,String viewerId);
 }

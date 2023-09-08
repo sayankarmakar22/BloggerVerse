@@ -12,6 +12,6 @@ import org.springframework.stereotype.Repository;
 @EnableJpaRepositories
 
 public interface BlogViewRepo extends JpaRepository<BlogView, String> {
-    @Query(value="SELECT SUM(b.view_count) FROM blog_view b WHERE b.blog_id = :blog_id")
-    long totalViews(@Param("blog_id")String blog_Id);
+    @Query(value="select sum(view_count) from blog_viewer where blog_id = :id",nativeQuery = true)
+    Long totalViews(@Param("id")String id);
 }

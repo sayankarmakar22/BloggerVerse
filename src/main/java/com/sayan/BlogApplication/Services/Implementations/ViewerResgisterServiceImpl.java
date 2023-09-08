@@ -69,7 +69,7 @@ public class ViewerResgisterServiceImpl implements ViewerServices {
     }
 
     @Override
-    public BlogViewResponse viewBlogAndUpdatedViewsToDb(String blogId,String viewerId) {
+    public BlogViewResponse viewBlogAndUpdatedViewsToDb(String viewSerialId,String blogId,String viewerId) {
         BlogPost publishedBlog = blogPostRepo.findByblogId(blogId);
         Viewer savedViewer = viewerRepo.findByviewerId(viewerId); //get viewer details from db
         Author savedAuthor = authorRepo.findByid(publishedBlog.getAuthor().getId()); // get the saved author from db
@@ -98,12 +98,11 @@ public class ViewerResgisterServiceImpl implements ViewerServices {
         blogPost.setBlogDateTime(publishedBlog.getBlogDateTime());
         blogPost.setAuthor(savedAuthor);
 
-//        if((viewerRepo.existsByviewerId(viewerId)) && (viewerId.equals(savedViewer.getViewerId()))){
             BlogView blogView = new BlogView();
-            blogView.setViewSerialId(String.valueOf(UUID.randomUUID()));
+            blogView.setViewSerialId(viewSerialId);
             blogView.setViewerId(viewerId);
             blogView.setAuthorId(savedAuthor.getId());
-            blogView.setViewCount(1);
+            blogView.setViewCount(1l);
             blogView.setBlogId(blogPost);
             BlogView savedBlog = blogViewRepo.save(blogView);
 

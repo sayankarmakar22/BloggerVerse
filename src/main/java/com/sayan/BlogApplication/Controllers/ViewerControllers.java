@@ -34,8 +34,8 @@ public class ViewerControllers {
     public ResponseEntity<String> deleteAccountViewer(@PathVariable String viewerId){
         return new ResponseEntity<>(viewerResgisterService.deleteViewerAccount(viewerId),HttpStatus.OK);
     }
-    @GetMapping("/view-post/{viewerId}/{blogId}")
-    public ResponseEntity<BlogViewResponse> viewBlog(@PathVariable String blogId,@PathVariable String viewerId){
-        return new ResponseEntity<>(viewerResgisterService.viewBlogAndUpdatedViewsToDb(blogId,viewerId),HttpStatus.OK);
+    @GetMapping("/view-post/{viewSerialId}/{viewerId}/{blogId}")
+    public ResponseEntity<BlogViewResponse> viewBlog(@PathVariable String viewSerialId,@PathVariable String blogId,@PathVariable String viewerId){
+        return new ResponseEntity<>(viewerResgisterService.viewBlogAndUpdatedViewsToDb(viewSerialId,blogId,viewerId),HttpStatus.OK);
     }
 }
