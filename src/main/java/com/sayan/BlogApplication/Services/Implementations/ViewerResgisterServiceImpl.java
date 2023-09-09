@@ -29,6 +29,11 @@ public class ViewerResgisterServiceImpl implements ViewerServices {
     private BlogViewRepo blogViewRepo;
     @Autowired
     private BlogPostRepo blogPostRepo;
+
+    public long getBlogViews(String blogId){
+        Long views = blogViewRepo.totalViews(blogId);
+        return views;
+    }
     @Override
     public ViewerRegisterResponse registerViewer(ViewerRegisterRequest viewerRegisterRequest){
         Viewer viewer = new Viewer();
@@ -110,8 +115,8 @@ public class ViewerResgisterServiceImpl implements ViewerServices {
             blogViewResponse.setAuthorName(savedAuthor.getName());
             blogViewResponse.setBlogTitle(blogPost.getBlogTitle());
             blogViewResponse.setBlogContent(blogPost.getBlogContent());
-            long totalViews = blogViewRepo.totalViews(blogId);
-            blogViewResponse.setBlogViews(totalViews);
+//            long totalViews = blogViewRepo.totalViews(blogId);
+            blogViewResponse.setBlogViews(getBlogViews(blogId));
             return blogViewResponse;
     }
 }

@@ -29,6 +29,9 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
     private BlogViewRepo blogViewRepo;
     @Autowired
     private AuthorRepo authorRepo;
+    public long getBlogViews(String blogId){
+        return authorRepo.totalViews(blogId);
+    }
     @Transactional
     @Override
     public AuthorPostResponse createNewPost(AuthorPostRequest authorPostRequest) {
@@ -40,7 +43,7 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
             Author fetchedAuthor = authorRepo.findByid(authorPostRequest.getAuthorId());
             AuthorPostHelper.setPostDetailsRequest(authorPostRequest,blogPost,author,fetchedAuthor);
             BlogPost post = blogPostRepo.save(blogPost);
-            return AuthorPostHelper.setPostDetailsResponse(authorPostResponse,post);
+            return AuthorPostHelper.setPostDetailsResponse(authorPostResponse,post,getBlogViews(post.getBlogId()));
         }
         throw new RuntimeException("user not exists");
     }
@@ -53,7 +56,7 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
         foundPublishedBlogFromDb.setBlogTitle(authorPostRequest.getBlogTitle());
         foundPublishedBlogFromDb.setBlogContent(authorPostRequest.getBlogContent());
         BlogPost editedBlogContent = blogPostRepo.save(foundPublishedBlogFromDb);
-        AuthorPostHelper.setPostDetailsResponse(authorPostResponse,editedBlogContent);
+        AuthorPostHelper.setPostDetailsResponse(authorPostResponse,editedBlogContent,getBlogViews(authorPostRequest.getBlogId()));
         return authorPostResponse;
     }
 
@@ -67,7 +70,7 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
     public AuthorPostResponse viewPost(String blogId) {
         BlogPost foundPublishedBlog = blogPostRepo.findByblogId(blogId);
         AuthorPostResponse authorPostResponse = new AuthorPostResponse();
-        AuthorPostResponse response = AuthorPostHelper.setPostDetailsResponse(authorPostResponse, foundPublishedBlog);
+        AuthorPostResponse response = AuthorPostHelper.setPostDetailsResponse(authorPostResponse, foundPublishedBlog,getBlogViews(blogId));
         return response;
     }
 

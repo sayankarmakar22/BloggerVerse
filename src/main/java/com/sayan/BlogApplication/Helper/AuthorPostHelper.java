@@ -5,6 +5,7 @@ import com.sayan.BlogApplication.DTO.AuthorPostResponse;
 import com.sayan.BlogApplication.Model.Author;
 import com.sayan.BlogApplication.Model.BlogPost;
 import com.sayan.BlogApplication.Repository.AuthorRepo;
+import com.sayan.BlogApplication.Services.Implementations.ViewerResgisterServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.stereotype.Component;
@@ -30,12 +31,13 @@ public class AuthorPostHelper {
         blogPost.setBlogDateTime(new Date());
         blogPost.setAuthor(author);
     }
-    public static AuthorPostResponse setPostDetailsResponse(AuthorPostResponse authorPostResponse,BlogPost post){
+    public static AuthorPostResponse setPostDetailsResponse(AuthorPostResponse authorPostResponse,BlogPost post,long views){
         authorPostResponse.setAuthorId(post.getAuthor().getId());
         authorPostResponse.setBlogId(post.getBlogId());
         authorPostResponse.setBlogContent(post.getBlogContent());
         authorPostResponse.setBlogTitle(post.getBlogTitle());
         authorPostResponse.setPublishDateTime(post.getBlogDateTime());
+        authorPostResponse.setViews(views);
         return authorPostResponse;
     }
 }

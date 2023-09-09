@@ -20,4 +20,5 @@ public class AuthorPostResponse {
     private String blogContent;
     private String blogTitle;
     private Date publishDateTime;
+    private long views;
 }
