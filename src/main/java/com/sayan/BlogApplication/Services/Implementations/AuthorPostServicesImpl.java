@@ -44,7 +44,7 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
             Author fetchedAuthor = authorRepo.findByid(authorPostRequest.getAuthorId());
             AuthorPostHelper.setPostDetailsRequest(authorPostRequest,blogPost,author,fetchedAuthor);
             BlogPost post = blogPostRepo.save(blogPost);
-            return AuthorPostHelper.setPostDetailsResponse(authorPostResponse,post,getBlogViews(post.getBlogId()),getAllComments(post.getBlogId()));
+            return AuthorPostHelper.setPostDetailsResponse(authorPostResponse,post,0,getAllComments(post.getBlogId()));
         }
         throw new RuntimeException("user not exists");
     }
@@ -57,8 +57,15 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
         foundPublishedBlogFromDb.setBlogTitle(authorPostRequest.getBlogTitle());
         foundPublishedBlogFromDb.setBlogContent(authorPostRequest.getBlogContent());
         BlogPost editedBlogContent = blogPostRepo.save(foundPublishedBlogFromDb);
-        AuthorPostHelper.setPostDetailsResponse(authorPostResponse,editedBlogContent,getBlogViews(authorPostRequest.getBlogId()),getAllComments(authorPostRequest.getBlogId()));
-        return authorPostResponse;
+        AuthorPostResponse response;
+        try{
+            long views = getBlogViews(authorPostResponse.getBlogId());
+            response = AuthorPostHelper.setPostDetailsResponse(authorPostResponse,editedBlogContent,views,getAllComments(authorPostRequest.getBlogId()));
+        }
+        catch (NullPointerException e){
+            response = AuthorPostHelper.setPostDetailsResponse(authorPostResponse,editedBlogContent,0,getAllComments(authorPostRequest.getBlogId()));
+        }
+        return response;
     }
 
     @Override
@@ -71,7 +78,15 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
     public AuthorPostResponse viewPost(String blogId) {
         BlogPost foundPublishedBlog = blogPostRepo.findByblogId(blogId);
         AuthorPostResponse authorPostResponse = new AuthorPostResponse();
-        AuthorPostResponse response = AuthorPostHelper.setPostDetailsResponse(authorPostResponse, foundPublishedBlog,getBlogViews(blogId),getAllComments(blogId));
+        AuthorPostResponse response;
+        try{
+            long views = getBlogViews(blogId);
+            response = AuthorPostHelper.setPostDetailsResponse(authorPostResponse, foundPublishedBlog,views,getAllComments(blogId));
+        }
+        catch (NullPointerException e){
+            response = AuthorPostHelper.setPostDetailsResponse(authorPostResponse, foundPublishedBlog,0l,getAllComments(blogId));
+        }
+       
         return response;
     }
 
