@@ -3,20 +3,22 @@ package com.sayan.BlogApplication.Services.Implementations;
 import com.sayan.BlogApplication.DTO.AuthorPostRequest;
 import com.sayan.BlogApplication.DTO.AuthorPostResponse;
 import com.sayan.BlogApplication.DTO.AuthorResponse;
+import com.sayan.BlogApplication.DTO.MoreContentTypeRequest;
 import com.sayan.BlogApplication.Helper.AuthorHelper;
 import com.sayan.BlogApplication.Helper.AuthorPostHelper;
-import com.sayan.BlogApplication.Model.Author;
-import com.sayan.BlogApplication.Model.BlogComment;
-import com.sayan.BlogApplication.Model.BlogPost;
-import com.sayan.BlogApplication.Model.BlogView;
+import com.sayan.BlogApplication.Helper.ViewerHelper;
+import com.sayan.BlogApplication.Model.*;
 import com.sayan.BlogApplication.Repository.AuthorRepo;
 import com.sayan.BlogApplication.Repository.BlogPostRepo;
 import com.sayan.BlogApplication.Repository.BlogViewRepo;
+import com.sayan.BlogApplication.Repository.ContentTypeRepo;
 import com.sayan.BlogApplication.Services.AuthorPostServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.lang.invoke.VarHandle;
 import java.util.*;
 
 @Service
@@ -27,6 +29,9 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
     private BlogViewRepo blogViewRepo;
     @Autowired
     private AuthorRepo authorRepo;
+    @Autowired
+    private ContentTypeRepo contentTypeRepo;
+
     public long getBlogViews(String blogId){
         return authorRepo.totalViews(blogId);
     }
@@ -86,7 +91,7 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
         catch (NullPointerException e){
             response = AuthorPostHelper.setPostDetailsResponse(authorPostResponse, foundPublishedBlog,0l,getAllComments(blogId));
         }
-       
+
         return response;
     }
 
@@ -102,6 +107,22 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
             blog.put("number of blog published : ",0);
             notFoundBlogResponse.add(0,blog);
             return notFoundBlogResponse;
+        }
+    }
+
+    @Override
+    public String addMoreContentType(MoreContentTypeRequest moreContentTypeRequest) {
+        try{
+            Author savedAuthor = authorRepo.findByid(moreContentTypeRequest.getAuthorId());
+            Author author = new Author();
+            ViewerHelper.setAuthor(author,savedAuthor);
+            ContentType contentType = new ContentType();
+            contentType.setContentType(moreContentTypeRequest.getContentType());
+            contentType.setAuthor(author);
+            contentTypeRepo.save(contentType);
+            return "added content type:" + moreContentTypeRequest.getContentType();
+        }catch (Exception e ){
+            return "you have tried to add content type to an non-existing author";
         }
     }
 

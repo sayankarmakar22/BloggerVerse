@@ -2,6 +2,7 @@ package com.sayan.BlogApplication.Services;
 
 import com.sayan.BlogApplication.DTO.AuthorPostRequest;
 import com.sayan.BlogApplication.DTO.AuthorPostResponse;
+import com.sayan.BlogApplication.DTO.MoreContentTypeRequest;
 import com.sayan.BlogApplication.Model.BlogPost;
 
 import java.util.List;
@@ -13,4 +14,5 @@ public interface AuthorPostServices {
     String deletePost(String blogId);
     AuthorPostResponse viewPost(String blogId);
     List<Map<String,Object>>  getAllBlog(String authorId);
+    String addMoreContentType(MoreContentTypeRequest moreContentTypeRequest);
 }
