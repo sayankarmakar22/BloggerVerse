@@ -31,13 +31,14 @@ public class AuthorPostHelper {
         blogPost.setBlogDateTime(new Date());
         blogPost.setAuthor(author);
     }
-    public static AuthorPostResponse setPostDetailsResponse(AuthorPostResponse authorPostResponse,BlogPost post,long views){
+    public static AuthorPostResponse setPostDetailsResponse(AuthorPostResponse authorPostResponse,BlogPost post,long views,List<String> comments){
         authorPostResponse.setAuthorId(post.getAuthor().getId());
         authorPostResponse.setBlogId(post.getBlogId());
         authorPostResponse.setBlogContent(post.getBlogContent());
         authorPostResponse.setBlogTitle(post.getBlogTitle());
         authorPostResponse.setPublishDateTime(post.getBlogDateTime());
         authorPostResponse.setViews(views);
+        authorPostResponse.setComments(comments);
         return authorPostResponse;
     }
 }

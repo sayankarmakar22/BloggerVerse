@@ -21,4 +21,5 @@ public class AuthorPostResponse {
     private String blogTitle;
     private Date publishDateTime;
     private long views;
+    private List<String> comments;
 }
