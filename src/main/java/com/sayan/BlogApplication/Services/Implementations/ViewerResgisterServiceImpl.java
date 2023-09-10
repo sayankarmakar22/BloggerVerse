@@ -1,26 +1,22 @@
 package com.sayan.BlogApplication.Services.Implementations;
 
-import com.sayan.BlogApplication.DTO.AuthorPostResponse;
-import com.sayan.BlogApplication.DTO.BlogViewResponse;
-import com.sayan.BlogApplication.DTO.ViewerRegisterRequest;
-import com.sayan.BlogApplication.DTO.ViewerRegisterResponse;
+import com.sayan.BlogApplication.DTO.*;
 import com.sayan.BlogApplication.Helper.ViewerHelper;
-import com.sayan.BlogApplication.Model.Author;
-import com.sayan.BlogApplication.Model.BlogPost;
-import com.sayan.BlogApplication.Model.BlogView;
-import com.sayan.BlogApplication.Model.Viewer;
-import com.sayan.BlogApplication.Repository.AuthorRepo;
-import com.sayan.BlogApplication.Repository.BlogPostRepo;
-import com.sayan.BlogApplication.Repository.BlogViewRepo;
-import com.sayan.BlogApplication.Repository.ViewerRepo;
+import com.sayan.BlogApplication.Model.*;
+import com.sayan.BlogApplication.Repository.*;
 import com.sayan.BlogApplication.Services.ViewerServices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class ViewerResgisterServiceImpl implements ViewerServices {
+    private Logger logger = LoggerFactory.getLogger(ViewerResgisterServiceImpl.class);
     @Autowired
     private ViewerRepo viewerRepo;
     @Autowired
@@ -29,10 +25,16 @@ public class ViewerResgisterServiceImpl implements ViewerServices {
     private BlogViewRepo blogViewRepo;
     @Autowired
     private BlogPostRepo blogPostRepo;
+    @Autowired
+    private BlogCommentRepo blogCommentRepo;
 
-    public long getBlogViews(String blogId){
+    public Long getBlogViews(String blogId){
         Long views = blogViewRepo.totalViews(blogId);
         return views;
+    }
+    public List<String> getAllComments(String blogId){
+        List<String> allBlogComments = blogCommentRepo.getAllBlogComments(blogId);
+        return allBlogComments;
     }
     @Override
     public ViewerRegisterResponse registerViewer(ViewerRegisterRequest viewerRegisterRequest){
@@ -75,33 +77,15 @@ public class ViewerResgisterServiceImpl implements ViewerServices {
 
     @Override
     public BlogViewResponse viewBlogAndUpdatedViewsToDb(String viewSerialId,String blogId,String viewerId) {
-        BlogPost publishedBlog = blogPostRepo.findByblogId(blogId);
-        Viewer savedViewer = viewerRepo.findByviewerId(viewerId); //get viewer details from db
+        BlogPost publishedBlog = blogPostRepo.findByblogId(blogId); //get published blog from db
         Author savedAuthor = authorRepo.findByid(publishedBlog.getAuthor().getId()); // get the saved author from db
 
         Author author = new Author();
-        author.setId(savedAuthor.getId());
-        author.setName(savedAuthor.getName());
-        author.setRegistrationDateTime(savedAuthor.getRegistrationDateTime());
-        author.setUsername(savedAuthor.getUsername());
-        author.setPassword(savedAuthor.getPassword());
-        author.setEmail(savedAuthor.getEmail());
-        author.setPhoneNumber(savedAuthor.getPhoneNumber());
+        ViewerHelper.setAuthor(author,savedAuthor);
 
-//        Viewer viewer = new Viewer();
-//        viewer.setViewerId(savedViewer.getViewerId());
-//        viewer.setName(savedViewer.getName());
-//        viewer.setEmail(savedViewer.getEmail());
-//        viewer.setUsername(savedViewer.getUsername());
-//        viewer.setPassword(savedViewer.getPassword());
-//        viewer.setRegistrationDateTime(savedViewer.getRegistrationDateTime());
 
         BlogPost blogPost = new BlogPost();
-        blogPost.setBlogId(publishedBlog.getBlogId());
-        blogPost.setBlogContent(publishedBlog.getBlogContent());
-        blogPost.setBlogTitle(publishedBlog.getBlogTitle());
-        blogPost.setBlogDateTime(publishedBlog.getBlogDateTime());
-        blogPost.setAuthor(savedAuthor);
+        ViewerHelper.setBlogPost(blogPost,publishedBlog,savedAuthor);
 
             BlogView blogView = new BlogView();
             blogView.setViewSerialId(viewSerialId);
@@ -115,8 +99,30 @@ public class ViewerResgisterServiceImpl implements ViewerServices {
             blogViewResponse.setAuthorName(savedAuthor.getName());
             blogViewResponse.setBlogTitle(blogPost.getBlogTitle());
             blogViewResponse.setBlogContent(blogPost.getBlogContent());
-//            long totalViews = blogViewRepo.totalViews(blogId);
             blogViewResponse.setBlogViews(getBlogViews(blogId));
+            blogViewResponse.setBlogComments(getAllComments(blogId));
             return blogViewResponse;
+    }
+
+    @Override
+    public String commentOnBlog(CommentBlogRequest commentBlogRequest) {
+        BlogPost publishedBlog = blogPostRepo.findByblogId(commentBlogRequest.getBlogId()); //get published blog from db
+        Author savedAuthor = authorRepo.findByid(commentBlogRequest.getAuthorId());
+        Author author = new Author();
+        ViewerHelper.setAuthor(author,savedAuthor);
+
+        BlogPost blogPost = new BlogPost();
+        ViewerHelper.setBlogPost(blogPost,publishedBlog,savedAuthor);
+
+        BlogComment blogComment = new BlogComment();
+
+        blogComment.setBlogSerialNumber(commentBlogRequest.getCommentId());
+        blogComment.setViewerId(commentBlogRequest.getViewerId());
+        blogComment.setComments(commentBlogRequest.getComment());
+        blogComment.setCommentDateTime(new Date());
+        blogComment.setBlogId(blogPost);
+
+        blogCommentRepo.save(blogComment);
+        return "comment added!!!";
     }
 }

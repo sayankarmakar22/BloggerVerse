@@ -1,6 +1,7 @@
 package com.sayan.BlogApplication.Controllers;
 
 import com.sayan.BlogApplication.DTO.BlogViewResponse;
+import com.sayan.BlogApplication.DTO.CommentBlogRequest;
 import com.sayan.BlogApplication.DTO.ViewerRegisterRequest;
 import com.sayan.BlogApplication.DTO.ViewerRegisterResponse;
 import com.sayan.BlogApplication.Model.Viewer;
@@ -37,5 +38,9 @@ public class ViewerControllers {
     @GetMapping("/view-post/{viewSerialId}/{viewerId}/{blogId}")
     public ResponseEntity<BlogViewResponse> viewBlog(@PathVariable String viewSerialId,@PathVariable String blogId,@PathVariable String viewerId){
         return new ResponseEntity<>(viewerResgisterService.viewBlogAndUpdatedViewsToDb(viewSerialId,blogId,viewerId),HttpStatus.OK);
+    }
+    @PostMapping("/comment-blog")
+    public ResponseEntity<String> commentOnBlog(@RequestBody CommentBlogRequest commentBlogRequest){
+        return new ResponseEntity<>(viewerResgisterService.commentOnBlog(commentBlogRequest),HttpStatus.CREATED);
     }
 }
