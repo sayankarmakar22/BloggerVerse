@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AuthorPostServicesImpl implements AuthorPostServices {
@@ -75,6 +73,21 @@ public class AuthorPostServicesImpl implements AuthorPostServices {
         AuthorPostResponse authorPostResponse = new AuthorPostResponse();
         AuthorPostResponse response = AuthorPostHelper.setPostDetailsResponse(authorPostResponse, foundPublishedBlog,getBlogViews(blogId),getAllComments(blogId));
         return response;
+    }
+
+    @Override
+    public List<Map<String,Object>>  getAllBlog(String authorId) {
+        List<Map<String, Object>> allBlog = authorRepo.getAllBlog(authorId);
+        if(allBlog.size() > 0){
+            return allBlog;
+        }
+        else{
+            List<Map<String,Object>> notFoundBlogResponse = new ArrayList<>();
+            Map<String,Object> blog = new HashMap<>();
+            blog.put("number of blog published : ",0);
+            notFoundBlogResponse.add(0,blog);
+            return notFoundBlogResponse;
+        }
     }
 
 }
