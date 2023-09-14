@@ -13,6 +13,7 @@ public class ViewerHelper {
         viewer.setViewerId(viewerRegisterRequest.getViewerId());
         viewer.setName(viewerRegisterRequest.getName());
         viewer.setEmail(viewerRegisterRequest.getEmail());
+        viewer.setRole(viewerRegisterRequest.getRole());
         viewer.setUsername(viewerRegisterRequest.getUsername());
         viewer.setPassword(viewerRegisterRequest.getPassword());
         viewer.setRegistrationDateTime(new Date());
@@ -32,6 +33,7 @@ public class ViewerHelper {
         author.setUsername(savedAuthor.getUsername());
         author.setPassword(savedAuthor.getPassword());
         author.setEmail(savedAuthor.getEmail());
+        author.setRole(savedAuthor.getRole());
         author.setPhoneNumber(savedAuthor.getPhoneNumber());
     }
     public static void setBlogPost(BlogPost blogPost,BlogPost publishedBlog,Author savedAuthor){

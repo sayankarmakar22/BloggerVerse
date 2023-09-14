@@ -38,4 +38,7 @@ public class Viewer {
 
     @Column
     private Date registrationDateTime;
+
+    @Column(length = 15)
+    private String role;
 }

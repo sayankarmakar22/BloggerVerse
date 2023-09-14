@@ -8,5 +8,7 @@ import org.springframework.stereotype.Repository;
 public interface ViewerRepo extends JpaRepository<Viewer, String> {
     Viewer findByviewerId(String viewerId);
     Boolean existsByviewerId(String viewerId);
+
+    Viewer findByusername(String username);
     
 }

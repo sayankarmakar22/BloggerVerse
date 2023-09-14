@@ -8,6 +8,7 @@ import com.sayan.BlogApplication.Services.ViewerServices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,6 +29,9 @@ public class ViewerResgisterServiceImpl implements ViewerServices {
     @Autowired
     private BlogCommentRepo blogCommentRepo;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public Long getBlogViews(String blogId){
         Long views = blogViewRepo.totalViews(blogId);
         return views;
@@ -38,6 +42,7 @@ public class ViewerResgisterServiceImpl implements ViewerServices {
     }
     @Override
     public ViewerRegisterResponse registerViewer(ViewerRegisterRequest viewerRegisterRequest){
+        viewerRegisterRequest.setPassword(passwordEncoder.encode(viewerRegisterRequest.getPassword()));
         Viewer viewer = new Viewer();
         ViewerRegisterResponse viewerRegisterResponse = new ViewerRegisterResponse();
         ViewerHelper.setViewerRegistrationDetails(viewerRegisterRequest,viewer);

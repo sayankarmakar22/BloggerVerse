@@ -15,6 +15,7 @@ public interface AuthorRepo extends JpaRepository<Author,String> {
     Author findByid(String id);
 
     Author findByusername(String username);
+    Boolean existsByusername(String username);
     @Query(value="select * from blog_post where author_id = :id",nativeQuery = true)
     List<Map<String,Object>> getAllBlog(@Param("id") String id);
     @Query(value="select sum(view_count) from blog_viewer where blog_id = :id",nativeQuery = true)

@@ -4,6 +4,7 @@ import com.sayan.BlogApplication.Security.JwtAuthEntryPoint;
 import com.sayan.BlogApplication.Security.JwtAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @EnableWebSecurity
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
     @Autowired
     private JwtAuthEntryPoint jwtAuthEntryPoint;
@@ -41,7 +43,11 @@ public class SecurityConfig {
         http.authorizeHttpRequests()
                 .antMatchers("/blog/new-author/**")
                 .permitAll()
-                .antMatchers("/secure-app/token-authors")
+                .antMatchers("/secure-app/token-authors/**")
+                .permitAll()
+                .antMatchers("/secure-app/token-viewer/**")
+                .permitAll()
+                .antMatchers("/blog/viewer/register-viewer/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
