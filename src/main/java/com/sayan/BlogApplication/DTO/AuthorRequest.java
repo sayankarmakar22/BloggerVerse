@@ -22,4 +22,5 @@ public class AuthorRequest {
     private String email;
     private String phoneNumber;
     private String contentType;
+    private String role;
 }

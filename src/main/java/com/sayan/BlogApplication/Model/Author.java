@@ -40,6 +40,9 @@ public class Author {
     @Column(length = 15)
     private String phoneNumber;
 
+    @Column(length = 15)
+    private String role;
+
 
 
 }

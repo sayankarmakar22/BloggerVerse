@@ -19,6 +19,7 @@ public class AuthorHelper {
         author.setPhoneNumber(authorRequest.getPhoneNumber());
         author.setUsername(authorRequest.getUsername());
         author.setPassword(authorRequest.getPassword());
+        author.setRole(authorRequest.getRole());
         author.setRegistrationDateTime(new Date());
         contentType.setContentType(authorRequest.getContentType());
         contentType.setAuthor(author);
@@ -30,6 +31,7 @@ public class AuthorHelper {
         authorResponse.setName(author.getName());
         authorResponse.setUsername(author.getUsername());
         authorResponse.setEmail(author.getEmail());
+        authorResponse.setRole(author.getRole());
         authorResponse.setPhoneNumber(author.getPhoneNumber());
         authorResponse.setRegistrationDateTime(String.valueOf(author.getRegistrationDateTime()));
         authorResponse.setContentType(contentType.getContentType());

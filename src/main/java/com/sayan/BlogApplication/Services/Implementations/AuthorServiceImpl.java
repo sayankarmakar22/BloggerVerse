@@ -9,6 +9,7 @@ import com.sayan.BlogApplication.Repository.AuthorRepo;
 import com.sayan.BlogApplication.Repository.ContentTypeRepo;
 import com.sayan.BlogApplication.Services.AuthorServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,8 +23,12 @@ public class AuthorServiceImpl implements AuthorServices {
     private AuthorRepo authorRepo;
     @Autowired
     private ContentTypeRepo contentTypeRepo;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public AuthorResponse createNewAuthor(AuthorRequest authorDto) {
+        authorDto.setPassword(passwordEncoder.encode(authorDto.getPassword()));
         Author author = new Author();
         ContentType contentType = new ContentType();
         AuthorResponse authorResponse = new AuthorResponse();

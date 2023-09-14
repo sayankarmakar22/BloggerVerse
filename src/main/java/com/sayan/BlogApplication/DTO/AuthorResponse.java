@@ -21,4 +21,5 @@ public class AuthorResponse {
     private String phoneNumber;
     private String contentType;
     private String registrationDateTime;
+    private String role;
 }
